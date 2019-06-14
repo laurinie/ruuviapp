@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ruuviapp</title>
+
+  <!-- update the version number as needed -->
+  <script defer src="/__/firebase/5.5.0/firebase-app.js"></script>
+  <!-- include only the Firebase features as you need -->
+  <script defer src="/__/firebase/5.5.0/firebase-auth.js"></script>
+  <script defer src="/__/firebase/5.5.0/firebase-database.js"></script>
+  <script defer src="/__/firebase/5.5.0/firebase-messaging.js"></script>
+  <script defer src="/__/firebase/5.5.0/firebase-storage.js"></script>
+  <!-- initialize the SDK after all desired features are loaded -->
+  <script defer src="/__/firebase/init.js"></script>
+
+  <style media="screen">
+    @import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+    body {
+      background: #ECEFF1;
+      color: rgba(0, 0, 0, 0.87);
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+
+    #history {
+      display: flex;
+      overflow-x: scroll;
+      padding: 10px;
+      width: auto;
+    }
+
+    #history label {
+      padding: 2px;
+      border: 2px solid rgba(0, 100, 152, 0.17);
+      border-radius: 20px;
+      margin: 2px;
+      color: rgb(0, 0, 0);
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Lämpötila</h1>
+  <h2 id="temperature">Ladataan tietoja...</h2>
+  <p id="time"></p>
+  <h2 id="temperature"></h2>
+  <label>
+    Ilmankosteus
+    <h2 id="humidity"></h2>
+  </label>
+  <h3>Historia</h3>
+  <div id="history">
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const temperature = document.querySelector("#temperature");
+      const time = document.querySelector("#time");
+      const humidity = document.querySelector("#humidity");
+      const history = document.querySelector("#history");
+      var db = firebase.database();
+      var ref = db.ref("/messages/");
+
+      ref.on("child_added", function (snapshot, prevChildKey) {
+        var newPost = snapshot.val();
+        // console.log("Time: " + newPost.time);
+        // console.log("Temp: " + newPost.tag.temperature);
+        temperature.textContent = newPost.tag.temperature + " °C";
+        time.textContent = newPost.time;
+        humidity.textContent = newPost.tag.humidity+" %";
+      });
+      ref.orderByChild("time").limitToFirst(100).on("child_added", function (snapshot) {
+        var newPost = snapshot.val();
+        // console.log("Time: " + newPost.time);
+        // console.log("Temp: " + newPost.tag.temperature);
+        let label = document.createElement("label");
+        let p = document.createElement("p");
+        let pH = document.createElement("p");
+        p.textContent = newPost.tag.temperature + " °C";
+        pH.textContent = newPost.tag.humidity+" %"
+        label.textContent = newPost.time;
+        label.appendChild(p);
+        label.appendChild(pH);
+        history.appendChild(label);
+
+        history.scroll({
+        left: history.scrollWidth,
+        behavior: "smooth"
+      });
+      });
+
+    });
+  </script>
+</body>
+
+</html>
