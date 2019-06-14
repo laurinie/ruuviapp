@@ -1,4 +1,8 @@
-# First steps
+# ruuviapp
+simple firebase app to sync and display ruuvitag data
+
+
+## First steps
 
 Create firebase account and project
 [firebase.google.com] (firebase.google.com) 
@@ -10,15 +14,23 @@ firebase init
 ```firebase init```
 
 
-# ruuviapp
-simple firebase app to sync and display ruuvitag data
 
-## npm start
+## Test & Deploy
+
 localhost
+```npm start```
 
-## firebase serve
+
 firebase version of localhost
+```firebase serve```
 
-## firebase debloy
+
 pushes app to firebase
+```firebase deploy```
+
+## Connect ruuvi
+
+Connect ruuvitag using old smartphone and apigateway URL
+
+Add firebase funtions url to ruuvistation app and voila
 
